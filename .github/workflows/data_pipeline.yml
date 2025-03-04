@@ -12,7 +12,7 @@ jobs:
       - name: Checkout repo content # 2. pull all code from github repo
         uses: actions/checkout@v4 
         with: 
-          token: ${{ secrets:PERSONAL_ACCESS_TOKEN }} # give workflow read and write access  to repo 18:36
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # give workflow read and write access  to repo 18:36
       - name: setup python # 3. create a python env
         uses: actions/setup-python@v5 
         with:
