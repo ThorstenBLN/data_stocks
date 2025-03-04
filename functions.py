@@ -4,11 +4,13 @@ import time
 from bs4 import BeautifulSoup
 import pandas as pd
 import numpy as np
-from credentials import FMP_KEY
+# from credentials import FMP_KEY
 import yfinance as yf
 import re
 import janitor
+import os
 
+FMP_KEY = os.getenv("FMP_KEY")
 
 user_agent_list = [
         "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1",
