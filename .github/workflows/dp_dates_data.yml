@@ -16,7 +16,7 @@ jobs:
       - name: setup python # 3. create a python env
         uses: actions/setup-python@v5 
         with:
-          python-version: '3.9's
+          python-version: '3.9'
           cache: 'pip' # pip libraries can be called from cache and don't have to be installed only once
       - name: install dependencies # 4. install the necessary libraries
         run: pip install -r requirements.txt
