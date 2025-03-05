@@ -11,10 +11,11 @@ warnings.simplefilter('ignore', 'FutureWarning')
 
 
 PATH = "./data/"
-PATH_BASE = PATH + "base_data/"
 FILE_SYMBOLS = "symbols_fin.xlsx"
 FILE_DATES = "dates.xlsx"
 FILE_KGV_5Y = "kgv_5y.xlsx"
+
+# PATH_BASE = PATH + "base_data/"
 # DATETIME_TODAY = dt.datetime.today().date()
 # DATE_TODAY = time.strftime("%Y%m%d")
 # PATH_RESULTS = PATH + str(DATETIME_TODAY.year) + "/" + str(DATETIME_TODAY.month) + "/"
@@ -29,12 +30,12 @@ FILE_KGV_5Y = "kgv_5y.xlsx"
 #     os.makedirs(PATH_RESULTS)
 
 # 1. load symbols
-df_base = pd.read_excel(PATH_BASE + FILE_SYMBOLS)
+df_base = pd.read_excel(PATH + FILE_SYMBOLS)
 
 # 2. finanzen.net: scrape data ############################################################
 # 2.1 scrape termine scrapet the vergangenen Termine (ca. 20 min for 1000 symbols)
 df_dates = f.scrape_dates(df_base.loc[df_base['data_all']].iloc[:])
-df_dates.to_excel(PATH_BASE + FILE_DATES, index=False)
+df_dates.to_excel(PATH + FILE_DATES, index=False)
 
 # 2.2 scrape old KGV (ca. 20 min for 1000 symbols)
 kgv_real = []
@@ -48,7 +49,7 @@ df_kgv_real = pd.DataFrame(kgv_real)
 df_kgv_real['kgv'] = np.where(df_kgv_real['kgv'] == '-', np.nan, df_kgv_real['kgv'])
 df_kgv_real['kgv'] = df_kgv_real['kgv'].str.replace(".","").str.replace(",", ".").astype(float)
 df_kgv_real_wide = df_kgv_real.loc[~df_kgv_real['kgv'].isna()].pivot(index='symbol', columns=['year'], values='kgv').reset_index()
-# df_kgv_real_wide.to_excel(PATH_BASE + FILE_KGV_REAL, index=False)
+# df_kgv_real_wide.to_excel(PATH + FILE_KGV_REAL, index=False)
 print("code real_kgv finished successfully")
 
 # 2.3 scrape estimated KGV (ca. 20 min for 1000 symbols)
@@ -63,12 +64,12 @@ df_kgv_est = pd.DataFrame(kgv_est)
 df_kgv_est['kgv'] = np.where(df_kgv_est['kgv'] == "-", np.nan, df_kgv_est['kgv'])
 df_kgv_est['kgv'] = df_kgv_est['kgv'].str.replace(".","").str.replace(",", ".").astype(float)
 df_kgv_est_wide = df_kgv_est.loc[~df_kgv_est['kgv'].isna()].pivot(index='symbol', columns='year', values='kgv').reset_index()
-# df_kgv_est_wide.to_excel(PATH_BASE + FILE_KGV_EST, index=False)
+# df_kgv_est_wide.to_excel(PATH + FILE_KGV_EST, index=False)
 print("code est_kgv finished successfully")
 
 # 2.4. add both data and calculate 5 years kgv
-# df_kgv_est_wide = pd.read_excel(PATH_BASE + FILE_KGV_EST)
-# df_kgv_real_wide = pd.read_excel(PATH_BASE + FILE_KGV_REAL)
+# df_kgv_est_wide = pd.read_excel(PATH + FILE_KGV_EST)
+# df_kgv_real_wide = pd.read_excel(PATH + FILE_KGV_REAL)
 
 df_kgv = df_kgv_real_wide.merge(df_kgv_est_wide, on='symbol', how='outer')
 df_kgv['kgv_real'] = df_kgv[[col for col in df_kgv.columns if "e" not in col and col != "symbol"]].apply(lambda x: any(x.notna()), axis=1)
@@ -79,6 +80,6 @@ df_kgv['kgv_5y'] = np.where(df_kgv[str(prev_year)].notna(), df_kgv[[str(year) if
                             df_kgv[[str(year) if year < prev_year else str(year) + "e" for year in range(prev_year - 2, prev_year + 3)]].mean(axis=1, skipna=True))
 df_kgv['kgv_5y'] = df_kgv['kgv_5y'].astype('float')
 df_kgv['download_date'] = time.strftime("%Y%m%d")
-df_kgv.to_excel(PATH_BASE + FILE_KGV_5Y, index=False)
+df_kgv.to_excel(PATH + FILE_KGV_5Y, index=False)
     
 

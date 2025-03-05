@@ -32,7 +32,7 @@ for row in df_symbols.iloc[:].itertuples():
     time.sleep(np.random.uniform(0.2, 0.5))
 print("all data collected")
 df_symbols['data_yf'] = data_yf
-df_symbols.to_excel(PATH + "symbols.xlsx", index=False)
+# df_symbols.to_excel(PATH + "symbols.xlsx", index=False)
 
 # 3. check valid symbols at finanzen.net (ca. 1h for each 1000 sybols)
 # 3.1 get all relevnt links 

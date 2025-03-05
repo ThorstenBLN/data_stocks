@@ -11,14 +11,15 @@ import re
 warnings.simplefilter('ignore', 'FutureWarning')
 
 PATH = "./data/"
-PATH_BASE = PATH + "base_data/"
 FILE_SYMBOLS = "symbols_fin.xlsx"
 FILE_DATES = "dates.xlsx"
 FILE_KGV_5Y = "kgv_5y.xlsx"
 FILE_RESULT = "result.xlsx"
 FILE_RESULT_DAY  = "result_last_download.xlsx"
+
 INDEX_SYMBOL = "^990100-USD-STRD"
 
+# PATH_BASE = PATH + "base_data/"
 # DATETIME_TODAY = dt.datetime.today().date()
 # DATE_TODAY = time.strftime("%Y%m%d")
 # PATH_RESULTS = PATH + str(DATETIME_TODAY.year) + "/" + str(DATETIME_TODAY.month) + "/"
@@ -41,8 +42,8 @@ if not os.path.exists(PATH + FILE_RESULT): # for the first time there is no resu
     df_result_cur = pd.DataFrame()
 else:
     df_result_cur = pd.read_excel(PATH + FILE_RESULT)
-df_base = pd.read_excel(PATH_BASE + FILE_SYMBOLS)
-df_dates = pd.read_excel(PATH_BASE + FILE_DATES)
+df_base = pd.read_excel(PATH + FILE_SYMBOLS)
+df_dates = pd.read_excel(PATH+ FILE_DATES)
 
 
 # 2. refresh financial dates ###########################################################
@@ -58,7 +59,7 @@ if not df_result_cur.empty:
     # 2.3 add the new dates to datesfiles and save file
     df_dates_update = df_dates.merge(df_dates_new[['symbol', 'check']], how='left')
     df_dates_update = pd.concat([df_dates_update.loc[df_dates_update['check'].isna()], df_dates_new])
-    df_dates_update.drop(columns='check').to_excel(PATH_BASE + FILE_DATES, index=False)
+    df_dates_update.drop(columns='check').to_excel(PATH + FILE_DATES, index=False)
 
 # 3. load data for levermann formual
 # 3.1 base data index and relevant dates #######################################################
@@ -80,7 +81,7 @@ df_index_prices = f.get_hist_prices(df_index_hist, DATES)
 
 # 3.2 get levermann data fram yfinance api (ca. 30 min / 1000 symbols)
 # get the dates of the last Geschäftszahlen presentation
-df_dates = pd.read_excel(PATH_BASE + FILE_DATES)
+df_dates = pd.read_excel(PATH + FILE_DATES)
 df_dates['time_delta'] = (df_dates['date'] - pd.to_datetime('today')).dt.days
 df_dates['date'] = df_dates['date'].dt.date
 df_dates_qrt = df_dates.loc[(df_dates['type'] == 'Quartalszahlen') & (df_dates['time_delta'] <= 0)].copy() 
@@ -102,7 +103,7 @@ df_data['data_date'] = pd.to_datetime(df_data['data_date']).dt.date
 print("code data levermann finished successfully")
 
 # 4. calculate levermann score #############################################################
-df_kgv = pd.read_excel(PATH_BASE + FILE_KGV_5Y)
+df_kgv = pd.read_excel(PATH + FILE_KGV_5Y)
 df_data['forward_kgv'] = np.where(df_data['forward_kgv'] == "Infinity", np.inf, df_data['forward_kgv']).astype('float')
 df_data_complete = df_data.merge(df_kgv, on='symbol', how='left')
 
