@@ -30,7 +30,7 @@ jobs:
           git config user.name 'github-actions'
           git config user.email 'github-actions@gibthub.com'
           git add .
-          git diff --staged --quiet || echo "changes=true" >> $GITBUB_ENV 
+          git diff --staged --quiet || echo "changes=true" >> $GITHUB_ENV 
       - name: commit and push if changes
         if: env.changes == 'true'
         run: |

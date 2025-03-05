@@ -268,7 +268,6 @@ def get_levermann_data(row, df_dax_hist, df_dax_prices, dates, qrt_date, jv_date
             min_later_dax = df_dax_hist.loc[df_dax_hist['date_diff'] > 0]['date_diff'].min()
             if df_dax_hist['date_diff'].max() == 0: # on the day of the qrt release, take this day
                 min_later_dax = df_dax_hist.loc[df_dax_hist['date_diff'] == 0]['date_diff'].min()
-            min_later_dax = df_dax_hist.loc[df_dax_hist['date_diff'] > 0]['date_diff'].min()
             price_dax_next = df_dax_hist.loc[df_dax_hist['date_diff'] == min_later_dax]['Close'].values[0]
             min_before_dax = df_dax_hist.loc[df_dax_hist['date_diff'] < 0]['date_diff'].max()
             price_dax_before = df_dax_hist.loc[df_dax_hist['date_diff'] == min_before_dax]['Close'].values[0]
