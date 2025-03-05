@@ -11,7 +11,7 @@ warnings.simplefilter('ignore', 'FutureWarning')
 
 
 PATH = "./data/"
-FILE_SYMBOLS = "symbols_fin.xlsx"
+FILE_SYMBOLS = "symbols.xlsx"
 FILE_DATES = "dates.xlsx"
 FILE_KGV_5Y = "kgv_5y.xlsx"
 
@@ -70,11 +70,10 @@ print("code est_kgv finished successfully")
 # 2.4. add both data and calculate 5 years kgv
 # df_kgv_est_wide = pd.read_excel(PATH + FILE_KGV_EST)
 # df_kgv_real_wide = pd.read_excel(PATH + FILE_KGV_REAL)
-
-df_kgv = df_kgv_real_wide.merge(df_kgv_est_wide, on='symbol', how='outer')
-df_kgv['kgv_real'] = df_kgv[[col for col in df_kgv.columns if "e" not in col and col != "symbol"]].apply(lambda x: any(x.notna()), axis=1)
-df_kgv['kgv_est'] = df_kgv[[col for col in df_kgv.columns if col.endswith("e")]].apply(lambda x: any(x.notna()), axis=1)
+# df_kgv['kgv_real'] = df_kgv[[col for col in df_kgv.columns if "e" not in col and col != "symbol"]].apply(lambda x: any(x.notna()), axis=1)
+# df_kgv['kgv_est'] = df_kgv[[col for col in df_kgv.columns if col.endswith("e")]].apply(lambda x: any(x.notna()), axis=1)
 # check if last year is reported or estimate
+df_kgv = df_kgv_real_wide.merge(df_kgv_est_wide, on='symbol', how='outer')
 prev_year = dt.datetime.now().year - 1
 df_kgv['kgv_5y'] = np.where(df_kgv[str(prev_year)].notna(), df_kgv[[str(year) if year <= prev_year else str(year) + "e" for year in range(prev_year - 2, prev_year + 3)]].mean(axis=1, skipna=True), 
                             df_kgv[[str(year) if year < prev_year else str(year) + "e" for year in range(prev_year - 2, prev_year + 3)]].mean(axis=1, skipna=True))
