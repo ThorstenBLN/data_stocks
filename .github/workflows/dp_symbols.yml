@@ -1,4 +1,4 @@
-name: data-pipeline-workflow
+name: data-pipeline-symbols_dates
 
 on:
   workflow_dispatch:
