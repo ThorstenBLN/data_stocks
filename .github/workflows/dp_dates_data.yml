@@ -1,9 +1,9 @@
-name: data-pipeline-workflow
+name: data-pipeline-dates_data_daily
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 2 1 * * # every 1st day in month at 02:00 a.m. crontab guru for more info
+    - cron: 0 2 * * * # every day at 02:00 - crontab guru for more info
 
 jobs:
   run-data-pipeline:
@@ -23,7 +23,7 @@ jobs:
       - name: run check symbol script # 5. run the python script
         env:
           FMP_KEY: ${{ secrets.FMP_KEY }}
-        run: python check_symbols.py
+        run: python extract_daily.py
       - name: check repo for changes # checking difference between staged changes and öast commits quiet: 0 when no changes true when changes
         id: git-check
         run: |           # checking difference between staged changes and öast commits quiet: 0 when no changes true when changes and set it as environmental variable (changes())

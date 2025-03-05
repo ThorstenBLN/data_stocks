@@ -38,7 +38,7 @@ df_symbols.to_excel(PATH + "symbols.xlsx", index=False)
 # df_symbols = pd.read_excel(PATH + "symbols.xlsx")
 BASE_URL = f"https://www.finanzen.net/"
 fin_links = []
-for row in df_symbols.loc[df_symbols['data_yf']].iloc[:].itertuples():
+for row in df_symbols.loc[df_symbols['data_yf']].iloc[:500].itertuples():
     if row.Index % 100 == 0:
         print(row.Index, row.symbol)
     fin_links.append(f.get_url_finanzen(row.symbol, row.name))
@@ -48,7 +48,7 @@ df_fin_links = pd.DataFrame(fin_links)
 df_fin_links['kgv_old_url'] = BASE_URL + "bilanz_guv/" + df_fin_links['name_finanzen']
 df_fin_links['kgv_est_url'] = BASE_URL + "schaetzungen/" + df_fin_links['name_finanzen']
 df_fin_links_final = df_fin_links.loc[df_fin_links['symbol'] == df_fin_links['symbol_finanzen']]
-df_fin_links_final.to_excel("./data/finanzen_links.xlsx", index=False)
+# df_fin_links_final.to_excel("./data/finanzen_links.xlsx", index=False)
 
 # 4. merge all data and save final list
 df_symbols_final = df_symbols.merge(df_fin_links_final[['symbol', 'name_finanzen', 'stock_url', 'termine_url', 'kgv_old_url', 'kgv_est_url']], on='symbol', how='left')

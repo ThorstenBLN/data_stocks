@@ -162,7 +162,7 @@ def get_levermann_data(row, df_dax_hist, df_dax_prices, dates, qrt_date, jv_date
     FIELDS = ['data_date', 'industry', 'finance', 'cap_size', 'market_cap', 'eigenkapital_rendite', 'ebit_marge', 'ek_quote', 'forward_kgv','reaktion_qrt', 'gewinnrevision', 
               'up_6m', 'up_12m', 'kursmomentum', 'up_vs_dax_3m', 'up_vs_dax_6m', 'cur_gewinnwachstum', 'strongBuy', 'buy', 'hold', 'sell', 'strongSell']
     # predefine results dict
-    result_temp = {'symbol':row.symbol, 'name':row.name}
+    result_temp = {'symbol':row.symbol, 'name':row.name, 'download_date':time.strftime("%Y%m%d")}
     # add dates and timediff and check which data is relevant for reaktion auf geschäftszahlen
     result_temp['rel_financials_date'] = None
     if jv_date.empty:
@@ -327,7 +327,7 @@ def add_levermann_score(df_data, na_penalty):
     analyst_start = list(df_valid.columns).index('strongbuy')
     df_valid['n_rec'] = df_valid.iloc[:, analyst_start:analyst_start + 5].sum(axis=1)
     df_valid['analyst_metric'] = (df_valid['strongbuy'] + df_valid['buy'] + 2 * df_valid['hold'] + 3 * (df_valid['sell'] + df_valid['strongsell'])) / df_valid['n_rec']
-    score_start = len(df_valid.columns)
+    # score_start = len(df_valid.columns)
     df_valid['lev_ekr'] = np.where(df_valid['eigenkapital_rendite'].isna(), na_penalty, np.where(df_valid['eigenkapital_rendite'] > 0.2, 1, np.where(df_valid['eigenkapital_rendite'] >= 0.1, 0, -1)))
     df_valid['lev_ebitm'] = np.where(df_valid['ebit_marge'].isna(), na_penalty, np.where(df_valid['ebit_marge'] > 0.12, 1, np.where(df_valid['ebit_marge'] >= 0.06, 0, -1)))
     df_valid['lev_ekq'] = np.where(df_valid['ek_quote'].isna(), na_penalty, np.where(df_valid['ek_quote'] > 0.25, 1, np.where(df_valid['ek_quote'] >= 0.15, 0, -1)))
@@ -345,7 +345,7 @@ def add_levermann_score(df_data, na_penalty):
     df_valid['lev_kmom'] = np.where(df_valid['kursmomentum'].isna(), na_penalty, np.where(df_valid['kursmomentum'] > 0.02, 1, np.where(df_valid['kursmomentum'] >= -0.02, 0, -1)))
     df_valid['lev_dmr'] = np.where(df_valid['up_vs_dax_3m'].isna(), na_penalty, np.where(df_valid['up_vs_dax_3m'] > 0.02, 1, np.where(df_valid['up_vs_dax_3m'] >= -0.02, 0, -1)))
     df_valid['lev_gw'] = np.where(df_valid['cur_gewinnwachstum'].isna(), na_penalty, np.where(df_valid['cur_gewinnwachstum'] > 0.05, 1, np.where(df_valid['up_vs_dax_3m'] >= -0.05, 0, -1)))
-    score_start = analyst_start = list(df_valid.columns).index('lev_ekr')
+    score_start = list(df_valid.columns).index('lev_ekr')
     df_valid['lev_score'] = df_valid.iloc[:, score_start:].sum(axis=1)
     return df_valid
 
