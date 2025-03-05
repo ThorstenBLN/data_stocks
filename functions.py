@@ -459,7 +459,7 @@ def scrape_dates(df):
         df_dates.rename(columns={0:'date', 1:'estimate'}, inplace=True)
     else:
         df_dates.rename(columns={0:'date'}, inplace=True)
-        df_dates['estimate'] = np.nan()
+        df_dates['estimate'] = np.nan
     df_dates['date'] = pd.to_datetime(df_dates['date'], format="%d.%m.%Y")
     df_dates['estimate'] = np.where(df_dates['estimate'].isna(), 0, 1)
     print("code termine finished successfully")
