@@ -11,7 +11,7 @@ import re
 warnings.simplefilter('ignore', 'FutureWarning')
 
 PATH = "./data/"
-FILE_SYMBOLS = "symbols_fin.xlsx"
+FILE_SYMBOLS = "symbols.xlsx"
 FILE_DATES = "dates.xlsx"
 FILE_KGV_5Y = "kgv_5y.xlsx"
 FILE_RESULT = "result.xlsx"
@@ -91,8 +91,8 @@ df_dates_jv_rel = df_dates_jv.sort_values(['time_delta'], ascending=False).group
 # download data
 data = []
 for row in df_base.loc[df_base['data_all'] == 1].iloc[:].itertuples():
-    if row.Index % 100 == 0:
-        print(row.Index, row.symbol)
+    # if row.Index % 100 == 0:
+    print(row.Index, row.symbol)
     qrt_date = df_dates_qrt_rel.loc[df_dates_qrt_rel['symbol'] == row.symbol]['date']
     jv_date = df_dates_jv_rel.loc[df_dates_jv_rel['symbol'] == row.symbol]['date']
     data.append(f.get_levermann_data(row, df_index_hist, df_index_prices, DATES, qrt_date, jv_date))
