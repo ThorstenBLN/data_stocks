@@ -144,16 +144,9 @@ def add_isin(df_symb:pd.DataFrame):
 
 def yf_data_available(symbol):
     '''checks data availability of a certain symbol in yfinance'''
-    return not yf.Ticker(symbol).history(period="1d").empty
-    
-def yf_data_available_2(symbol):
-    '''checks data availability of a certain symbol in yfinance'''
-    time.sleep(np.random.uniform(0.2, 0.7))
-    dat = yf.Ticker(symbol)
-    if dat.history(period="1d").empty:
-        return 'no_data'
-    else:  
-        return dat.history(period="1d").index[0]
+    if yf.Ticker(symbol).history(period="1d").empty:
+        return 0
+    return 1
 
 def get_levermann_data(row, df_dax_hist, df_dax_prices, dates, qrt_date, jv_date):
     '''get all data needed to calculate the levermann formula'''

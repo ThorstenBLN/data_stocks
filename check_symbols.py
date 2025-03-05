@@ -19,8 +19,8 @@ df_symbols_all = f.get_fmp_symbols(exchange_names=['NASDAQ', 'NYSE', 'XETRA'], s
 df_symbols_all['symbol'] = df_symbols_all['symbol'].astype(str)
 
 # get only the original symbols
-df_symbols_all['org'] = df_symbols_all['symbol'].apply(lambda x: "." not in x)
-df_symbols = df_symbols_all.loc[df_symbols_all['org']].drop_duplicates('name').copy().reset_index()
+df_symbols_all['org'] = df_symbols_all['symbol'].apply(lambda x: 1 if "." not in x else 0)
+df_symbols = df_symbols_all.loc[df_symbols_all['org'] == 1].drop_duplicates('name').copy().reset_index()
 
 # df_symbols = df_symbols.iloc[:500].copy()
 # 2. check if data in yfinance (ca. 9 min for 1000 symb) ###########################################
@@ -37,7 +37,7 @@ df_symbols['data_yf'] = data_yf
 # 3.1 get all relevnt links 
 BASE_URL = f"https://www.finanzen.net/"
 fin_links = []
-for row in df_symbols.loc[df_symbols['data_yf']].iloc[:].itertuples():
+for row in df_symbols.loc[df_symbols['data_yf'] == 1].iloc[:].itertuples():
     if row.Index % 100 == 0:
         print(row.Index, row.symbol)
     fin_links.append(f.get_url_finanzen(row.symbol, row.name))
