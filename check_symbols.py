@@ -21,6 +21,7 @@ df_symbols_all['symbol'] = df_symbols_all['symbol'].astype(str)
 df_symbols_all['org'] = df_symbols_all['symbol'].apply(lambda x: "." not in x)
 df_symbols = df_symbols_all.loc[df_symbols_all['org']].drop_duplicates('name').copy().reset_index()
 
+df_symbols = df_symbols.iloc[:500].copy()
 # 2. check if data in yfinance (ca. 9 min for 1000 symb) ###########################################
 # data_yf = [f.yf_data_available(row.symbol) for row in df_symbols.iloc[:].itertuples()]
 data_yf = []
@@ -38,7 +39,7 @@ df_symbols.to_excel(PATH + "symbols.xlsx", index=False)
 # df_symbols = pd.read_excel(PATH + "symbols.xlsx")
 BASE_URL = f"https://www.finanzen.net/"
 fin_links = []
-for row in df_symbols.loc[df_symbols['data_yf']].iloc[:500].itertuples():
+for row in df_symbols.loc[df_symbols['data_yf']].iloc[:].itertuples():
     if row.Index % 100 == 0:
         print(row.Index, row.symbol)
     fin_links.append(f.get_url_finanzen(row.symbol, row.name))
