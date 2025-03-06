@@ -18,6 +18,7 @@ FILE_RESULT = "result.xlsx"
 FILE_RESULT_DAY  = "result_last_download.xlsx"
 
 INDEX_SYMBOL = "^990100-USD-STRD"
+NA_PENALTY = -0.333
 
 # PATH_BASE = PATH + "base_data/"
 # DATETIME_TODAY = dt.datetime.today().date()
@@ -107,7 +108,6 @@ df_kgv = pd.read_excel(PATH + FILE_KGV_5Y)
 df_data['forward_kgv'] = np.where(df_data['forward_kgv'] == "Infinity", np.inf, df_data['forward_kgv']).astype('float')
 df_data_complete = df_data.merge(df_kgv, on='symbol', how='left')
 
-NA_PENALTY = -0.333
 df_result = f.add_levermann_score(df_data_complete, NA_PENALTY)
 df_result_tot = pd.concat([df_result_cur, df_result], axis=0).reset_index()
 df_result.to_excel(PATH + FILE_RESULT_DAY, index=False)

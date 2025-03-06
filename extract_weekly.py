@@ -13,7 +13,7 @@ warnings.simplefilter('ignore', 'FutureWarning')
 PATH = "./data/"
 FILE_SYMBOLS = "symbols.xlsx"
 FILE_DATES = "dates.xlsx"
-FILE_KGV_5Y = "kgv_5y.xlsx"
+FILE_KGV = "kgv_5y.xlsx"
 
 # PATH_BASE = PATH + "base_data/"
 # DATETIME_TODAY = dt.datetime.today().date()
@@ -34,13 +34,13 @@ df_base = pd.read_excel(PATH + FILE_SYMBOLS)
 
 # 2. finanzen.net: scrape data ############################################################
 # 2.1 scrape termine scrapet the vergangenen Termine (ca. 20 min for 1000 symbols)
-df_dates = f.scrape_dates(df_base.loc[df_base['data_all'] == 1].iloc[:])
+df_dates = f.scrape_dates(df_base.loc[df_base['data_all'] == 1].iloc[:500])
 df_dates.to_excel(PATH + FILE_DATES, index=False)
 
 # 2.2 scrape old KGV (ca. 20 min for 1000 symbols)
 kgv_real = []
 REL_YEARS_REAL = ["2024", "2023", "2022", "2021"]
-for row in df_base.loc[df_base['data_all'] == 1].iloc[:].itertuples():
+for row in df_base.loc[df_base['data_all'] == 1].iloc[:500].itertuples():
     if row.Index % 100 == 0:
         print(row.Index, row.symbol)
     kgv_real = kgv_real + f.scrape_finanzen_kgv_real(row.symbol, row.kgv_old_url, REL_YEARS_REAL)
@@ -55,7 +55,7 @@ print("code real_kgv finished successfully")
 # 2.3 scrape estimated KGV (ca. 20 min for 1000 symbols)
 kgv_est = []
 REL_YEARS_EST = ["2024e", "2025e", "2026e", "2027e"]
-for row in df_base.loc[df_base['data_all'] == 1].iloc[:].itertuples():
+for row in df_base.loc[df_base['data_all'] == 1].iloc[:500].itertuples():
     if row.Index % 100 == 0:
         print(row.Index, row.symbol)
     kgv_est = kgv_est + f.scrape_finanzen_kgv_est(row.symbol, row.kgv_est_url, REL_YEARS_EST)
@@ -79,6 +79,6 @@ df_kgv['kgv_5y'] = np.where(df_kgv[str(prev_year)].notna(), df_kgv[[str(year) if
                             df_kgv[[str(year) if year < prev_year else str(year) + "e" for year in range(prev_year - 2, prev_year + 3)]].mean(axis=1, skipna=True))
 df_kgv['kgv_5y'] = df_kgv['kgv_5y'].astype('float')
 df_kgv['download_date'] = time.strftime("%Y%m%d")
-df_kgv.to_excel(PATH + FILE_KGV_5Y, index=False)
+df_kgv.to_excel(PATH + FILE_KGV, index=False)
     
 

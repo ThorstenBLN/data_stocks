@@ -51,6 +51,6 @@ df_fin_links_final = df_fin_links.loc[df_fin_links['symbol'] == df_fin_links['sy
 
 # 4. merge all data and save final list
 df_symbols_final = df_symbols.merge(df_fin_links_final[['symbol', 'name_finanzen', 'stock_url', 'termine_url', 'kgv_old_url', 'kgv_est_url']], on='symbol', how='left')
-mask = (df_symbols_final['data_yf']) & (~df_symbols_final['name_finanzen'].isna())
+mask = (df_symbols_final['data_yf'] == 1) & (~df_symbols_final['name_finanzen'].isna())
 df_symbols_final['data_all'] = np.where(mask, 1, 0)
 df_symbols_final.to_excel(PATH + FILE, index=False)
