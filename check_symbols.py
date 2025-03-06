@@ -22,7 +22,6 @@ df_symbols_all['symbol'] = df_symbols_all['symbol'].astype(str)
 df_symbols_all['org'] = df_symbols_all['symbol'].apply(lambda x: 1 if "." not in x else 0)
 df_symbols = df_symbols_all.loc[df_symbols_all['org'] == 1].drop_duplicates('name').copy().reset_index()
 
-# df_symbols = df_symbols.iloc[:500].copy()
 # 2. check if data in yfinance (ca. 9 min for 1000 symb) ###########################################
 data_yf = []
 for row in df_symbols.iloc[:].itertuples():
@@ -43,11 +42,11 @@ for row in df_symbols.loc[df_symbols['data_yf'] == 1].iloc[:].itertuples():
     fin_links.append(f.get_url_finanzen(row.symbol, row.name))
     time.sleep(np.random.uniform(0.3, 0.8))
 df_fin_links = pd.DataFrame(fin_links)
+
 # add links and check if symbols are identical 
 df_fin_links['kgv_old_url'] = BASE_URL + "bilanz_guv/" + df_fin_links['name_finanzen']
 df_fin_links['kgv_est_url'] = BASE_URL + "schaetzungen/" + df_fin_links['name_finanzen']
 df_fin_links_final = df_fin_links.loc[df_fin_links['symbol'] == df_fin_links['symbol_finanzen']]
-# df_fin_links_final.to_excel("./data/finanzen_links.xlsx", index=False)
 
 # 4. merge all data and save final list
 df_symbols_final = df_symbols.merge(df_fin_links_final[['symbol', 'name_finanzen', 'stock_url', 'termine_url', 'kgv_old_url', 'kgv_est_url']], on='symbol', how='left')
