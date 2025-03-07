@@ -13,30 +13,13 @@ warnings.simplefilter('ignore', 'FutureWarning')
 PATH = "./data/"
 FILE_SYMBOLS = "symbols.xlsx"
 FILE_DATES = "dates.xlsx"
-FILE_KGV_5Y = "kgv_5y.xlsx"
+FILE_KGV = "kgv_5y.xlsx"
 FILE_RESULT = "result.xlsx"
+FILE_DATA = "data_all.xlsx"
 FILE_RESULT_DAY  = "result_last_download.xlsx"
 
-INDEX_SYMBOL = "^990100-USD-STRD"
+INDEX_SYMBOL = "^990100-USD-STRD" #"^GDAXI"
 NA_PENALTY = -0.333
-
-# PATH_BASE = PATH + "base_data/"
-# DATETIME_TODAY = dt.datetime.today().date()
-# DATE_TODAY = time.strftime("%Y%m%d")
-# PATH_RESULTS = PATH + str(DATETIME_TODAY.year) + "/" + str(DATETIME_TODAY.month) + "/"
-# FILE_DATA = str(DATE_TODAY) + "_data.xlsx"
-# FILE_DATA_COMPLETE = str(DATE_TODAY) + "_data_complete.xlsx"
-# FILE_KGV_REAL = "kgv_real.xlsx"
-# FILE_KGV_EST = "kgv_est.xlsx"
-
-# 0. manage folder #####################################################################
-# get last work folders
-# PATH_CUR = PATH + str(max([int(elem) for elem in os.listdir(PATH) if os.path.isdir(PATH + elem) and elem != "base_data"])) + "/"
-# PATH_CUR = PATH_CUR + str(max([int(elem) for elem in os.listdir(PATH_CUR) if os.path.isdir(PATH_CUR + elem)])) + "/"
-# # get last results_file
-# FILES = [elem for elem in os.listdir(PATH_CUR) if os.path.isfile(PATH_CUR + elem) and "result.xlsx" in elem and re.match('^[0-9]', elem)]
-# LIST_DATES = [int(elem[:8]) for elem in FILES] 
-# FILE_RESULT_CUR = FILES[LIST_DATES.index(max(LIST_DATES))]     
 
 # 1. load base data ####################################################################
 if not os.path.exists(PATH + FILE_RESULT): # for the first time there is no result file
@@ -64,7 +47,6 @@ if not df_result_cur.empty:
 
 # 3. load data for levermann formual
 # 3.1 base data index and relevant dates #######################################################
-# dat_dax = yf.Ticker("^GDAXI")
 dat_index = yf.Ticker(INDEX_SYMBOL)
 df_index_hist = dat_index.history(period="2y").reset_index()
 df_index_hist['Date'] = df_index_hist['Date'].dt.date
@@ -100,11 +82,11 @@ for row in df_base.loc[df_base['data_all'] == 1].iloc[:].itertuples():
     time.sleep(np.random.uniform(0.3, 0.8))
 df_data = pd.DataFrame(data)
 df_data['data_date'] = pd.to_datetime(df_data['data_date']).dt.date
-# df_data.to_excel(PATH_RESULTS + FILE_DATA, index=False)
+df_data.to_excel(PATH + FILE_DATA, index=False)
 print("code data levermann finished successfully")
 
 # 4. calculate levermann score #############################################################
-df_kgv = pd.read_excel(PATH + FILE_KGV_5Y)
+df_kgv = pd.read_excel(PATH + FILE_KGV)
 df_data['forward_kgv'] = np.where(df_data['forward_kgv'] == "Infinity", np.inf, df_data['forward_kgv']).astype('float')
 df_data_complete = df_data.merge(df_kgv, on='symbol', how='left')
 
