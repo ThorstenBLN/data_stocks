@@ -79,7 +79,7 @@ for row in df_base.loc[df_base['data_all'] == 1].iloc[:].itertuples():
     qrt_date = df_dates_qrt_rel.loc[df_dates_qrt_rel['symbol'] == row.symbol]['date']
     jv_date = df_dates_jv_rel.loc[df_dates_jv_rel['symbol'] == row.symbol]['date']
     data.append(f.get_levermann_data(row, df_index_hist, df_index_prices, DATES, qrt_date, jv_date))
-    time.sleep(np.random.uniform(0.5, 1))
+    time.sleep(np.random.uniform(0.5, 1.3))
 df_data = pd.DataFrame(data)
 df_data['data_date'] = pd.to_datetime(df_data['data_date']).dt.date
 df_data.to_excel(PATH + FILE_DATA, index=False)
