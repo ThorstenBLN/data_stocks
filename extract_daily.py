@@ -20,20 +20,21 @@ FILE_RESULT_DAY  = "result_last_download.xlsx"
 
 INDEX_SYMBOL = "^990100-USD-STRD" #"^GDAXI"
 NA_PENALTY = -0.333
+DAYS_THRES = 85
 
 # 1. load base data ####################################################################
 if not os.path.exists(PATH + FILE_RESULT): # for the first time there is no result file
     df_result_cur = pd.DataFrame()
 else:
     df_result_cur = pd.read_excel(PATH + FILE_RESULT)
-df_base = pd.read_excel(PATH + FILE_SYMBOLS)
+df_base_orig = pd.read_excel(PATH + FILE_SYMBOLS)
+mask = (df_base_orig['data_all'] == 1) & (df_base_orig['symbol'].notna())
+df_base = df_base_orig.loc[mask].copy()
 df_dates = pd.read_excel(PATH+ FILE_DATES)
-
 
 # 2. refresh financial dates ###########################################################
 # 2.1 filter on symbols where last reporting date is older then x days (ca. 25 min / 1000 symbols)
 if not df_result_cur.empty:
-    DAYS_THRES = 80
     mask_renew = (df_result_cur['days_passed'] >= DAYS_THRES) | (df_result_cur['days_passed'].isna())
     df_dates_renew = df_result_cur.loc[mask_renew][['symbol']]
     df_dates_renew = df_base.merge(df_dates_renew, on='symbol', how='inner')
@@ -73,9 +74,9 @@ df_dates_jv = df_dates.loc[(df_dates['type'] == 'Hauptversammlung') & (df_dates[
 df_dates_jv_rel = df_dates_jv.sort_values(['time_delta'], ascending=False).groupby(['symbol']).head(1).reset_index()
 # download data
 data = []
-for row in df_base.loc[df_base['data_all'] == 1].iloc[:].itertuples():
-    # if row.Index % 100 == 0:
-    print(row.Index, row.symbol)
+for row in df_base.iloc[:].itertuples():
+    if row.Index % 100 == 0:
+        print(row.Index, row.symbol)
     qrt_date = df_dates_qrt_rel.loc[df_dates_qrt_rel['symbol'] == row.symbol]['date']
     jv_date = df_dates_jv_rel.loc[df_dates_jv_rel['symbol'] == row.symbol]['date']
     data.append(f.get_levermann_data(row, df_index_hist, df_index_prices, DATES, qrt_date, jv_date))
