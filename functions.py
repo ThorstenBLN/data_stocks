@@ -325,7 +325,7 @@ def add_levermann_score(df_data, na_penalty):
     df_valid['lev_ebitm'] = np.where(df_valid['ebit_marge'].isna(), na_penalty, np.where(df_valid['ebit_marge'] > 0.12, 1, np.where(df_valid['ebit_marge'] >= 0.06, 0, -1)))
     df_valid['lev_ekq'] = np.where(df_valid['ek_quote'].isna(), na_penalty, np.where(df_valid['ek_quote'] > 0.25, 1, np.where(df_valid['ek_quote'] >= 0.15, 0, -1)))
     mask_fin = df_valid['finance'] == 1
-    df_valid['lev_ekq'] = np.where(df_valid['ek_quote'].isna(), na_penalty, np.where(mask_fin & (df_valid['ek_quote'] > 0.10), 1, np.where(mask_fin & df_valid['ek_quote'] >= 0.05, 0, np.where(mask_fin & df_valid['ek_quote'] < 0.05, -1, df_valid['lev_ekq']))))
+    df_valid['lev_ekq'] = np.where(df_valid['ek_quote'].isna(), na_penalty, np.where(mask_fin & (df_valid['ek_quote'] > 0.10), 1, np.where(mask_fin & (df_valid['ek_quote'] >= 0.05), 0, np.where(mask_fin & (df_valid['ek_quote'] < 0.05), -1, df_valid['lev_ekq']))))
     df_valid['lev_kgv5y'] = np.where(df_valid['kgv_5y'].isna(), na_penalty, np.where(df_valid['kgv_5y'] < 0, -1, np.where(df_valid['kgv_5y'] < 12, 1, np.where(df_valid['kgv_5y'] <= 16, 0, -1))))
     df_valid['lev_fkgv'] = np.where(df_valid['forward_kgv'].isna(), na_penalty, np.where(df_valid['forward_kgv'] < 0, -1, np.where(df_valid['forward_kgv'] < 12, 1, np.where(df_valid['forward_kgv'] <= 16, 0, -1))))
     df_valid['lev_anam'] = np.where(df_valid['analyst_metric'].isna(), na_penalty, np.where(df_valid['analyst_metric'] > 2.5, 1, np.where(df_valid['analyst_metric'] >= 1.5, 0, -1)))

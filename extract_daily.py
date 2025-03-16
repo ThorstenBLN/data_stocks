@@ -88,11 +88,12 @@ print("code data levermann finished successfully")
 
 # 4. calculate levermann score #############################################################
 df_kgv = pd.read_excel(PATH + FILE_KGV)
+# df_data = pd.read_excel(PATH + FILE_DATA)
 df_data['forward_kgv'] = np.where(df_data['forward_kgv'] == "Infinity", np.inf, df_data['forward_kgv']).astype('float')
 df_data_complete = df_data.merge(df_kgv, on='symbol', how='left')
 
 df_result = f.add_levermann_score(df_data_complete, NA_PENALTY)
-df_result_tot = pd.concat([df_result_cur, df_result], axis=0).reset_index()
+df_result_tot = pd.concat([df_result_cur, df_result], axis=0).reset_index(drop=True)
 df_result.to_excel(PATH + FILE_RESULT_DAY, index=False)
 df_result_tot.to_excel(PATH + FILE_RESULT, index=False)
 
