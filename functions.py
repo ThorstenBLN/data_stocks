@@ -252,8 +252,8 @@ def get_levermann_data(row, df_dax_hist, df_dax_prices, dates, qrt_date, jv_date
     else:
         df_hist['date_diff'] = (pd.to_datetime(df_hist['Date']) - pd.to_datetime(result_temp['rel_financials_date'])).dt.days
         df_dax_hist['date_diff'] = (pd.to_datetime(df_dax_hist['Date']) - pd.to_datetime(result_temp['rel_financials_date'])).dt.days
-        # check if there is a the window of +/- 1 day in the data (1. qrt date too old, 2. qrt date way too old)
-        if df_hist['date_diff'].max() > MAX_QRT_DAY_DISTANCE or df_hist['date_diff'].min() > 0:
+        # check if there is a the window of +/- 1 day in the data (1. qrt date too old, 2. all data newer than wrt date, 3. qrt date newer than any data 
+        if df_hist['date_diff'].max() > MAX_QRT_DAY_DISTANCE or df_hist['date_diff'].min() > 0 or df_hist['date_diff'].max() < 0:
             result_temp['reaktion_qrt'] = np.nan
             print("no valid qrt_date")
         else:
