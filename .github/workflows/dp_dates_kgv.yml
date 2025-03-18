@@ -34,5 +34,5 @@ jobs:
       - name: commit and push if changes
         if: env.changes == 'true'
         run: |
-          git commit -m "updated symbols"
+          git commit -m "updated dates and kgv"
           git push
