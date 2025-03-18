@@ -20,7 +20,7 @@ jobs:
           cache: 'pip' # pip libraries can be called from cache and don't have to be installed only once
       - name: install dependencies # 4. install the necessary libraries
         run: pip install -r requirements.txt
-      - name: run dates and kgv script # 5. run the python script
+      - name: run depot manager # 5. run the python script
         env:
           FMP_KEY: ${{ secrets.FMP_KEY }}
         run: python depot_manager.py
