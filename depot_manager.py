@@ -35,9 +35,9 @@ else:
 # 1. update the current values of the stocks
 df_depot.reset_index(drop=True, inplace=True)
 mask_bank = df_depot['symbol'] == 'bank'
-for row in df_depot.loc[~mask_bank].itertuples():
+df_check = df_depot.copy()
+for row in df_check.loc[~mask_bank].itertuples():
     print(row.Index, type(row.Index))
-    row = row.copy()
     try:
         cur_price = yf.Ticker(row.symbol).info['regularMarketPrice']
         # cur_return = cur_price / row.price_buy - 1
