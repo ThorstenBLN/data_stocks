@@ -44,9 +44,10 @@ for row in df_depot.loc[~mask_bank].itertuples():
         df_depot.at[row.Index, "value"] = cur_price * row.amount
         df_depot.at[row.Index, "return"] = cur_price / row.price_buy - 1
     except Exception as err:
-        print(row.symbol, err)
+        print("0", row.symbol, err)
 df_depot = df_depot.drop(columns='lev_score').merge(df_result[['symbol', 'lev_score']], on='symbol', how='left')
 df_depot.at[0, 'lev_score'] = 100
+
 # 2. buy/sell stocks 
 # 2.1 sell based on fixed values
 mask_1 = df_depot['lev_score'] <= MIN_L_SCORE
@@ -87,7 +88,7 @@ for row in df_buy_opt.itertuples():
         # reduce bank account value by purchase volume
         df_depot.at[0, 'value'] = df_depot.at[0, "value"] - cur_price * amount
     except Exception as err:
-        print(row.symbol, err)
+        print("1", row.symbol, err)
     
 # 2.3. shift stocks to better options
 # get possible stocks
@@ -125,7 +126,7 @@ for row in df_sales.itertuples():
             # reduce bank account value by purchase volume
             df_depot.at[0, 'value'] = df_depot.at[0, "value"] - cur_price * amount    
         except Exception as err:
-            print(row.symbol, err)
+            print("2", row.symbol, err)
 # delete stocks from depot
 df_depot = df_depot.loc[~df_depot['symbol'].isin(symbols_sold)].reset_index(drop=True)
 
