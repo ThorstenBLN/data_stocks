@@ -33,16 +33,16 @@ else:
     df_transact = pd.read_excel(PATH + FILE_TRANSACTIONS)
 
 # 1. update the current values of the stocks
-df_depot.reset_index(drop=True)
+df_depot.reset_index(drop=True, inplace=True)
 mask_bank = df_depot['symbol'] == 'bank'
 for row in df_depot.loc[~mask_bank].itertuples():
     try:
         cur_price = yf.Ticker(row.symbol).info['regularMarketPrice']
         # cur_return = cur_price / row.price_buy - 1
-        df_depot.loc[row.Index, "price_cur"] = cur_price
-        df_depot.loc[row.Index, "cur_date"] = time.strftime("%Y-%m-%d")
-        df_depot.loc[row.Index, "value"] = cur_price * row.amount
-        df_depot.loc[row.Index, "return"] = cur_price / row.price_buy - 1
+        df_depot.at[row.Index, "price_cur"] = cur_price
+        df_depot.at[row.Index, "cur_date"] = time.strftime("%Y-%m-%d")
+        df_depot.at[row.Index, "value"] = cur_price * row.amount
+        df_depot.at[row.Index, "return"] = cur_price / row.price_buy - 1
     except Exception as err:
         print("0", row.symbol, err)
 df_depot = df_depot.drop(columns='lev_score').merge(df_result[['symbol', 'lev_score']], on='symbol', how='left')
