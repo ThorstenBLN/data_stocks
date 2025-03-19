@@ -37,16 +37,14 @@ df_depot.reset_index(drop=True, inplace=True)
 mask_bank = df_depot['symbol'] == 'bank'
 df_check = df_depot.copy()
 for row in df_check.loc[~mask_bank].itertuples():
-    print(row.Index, type(row.Index))
-    # try:
-    cur_price = yf.Ticker(row.symbol).info['regularMarketPrice']
-    cur_return = cur_price / row.price_buy - 1
-    df_depot.at[row.Index, "price_cur"] = cur_price
-    df_depot.at[row.Index, "cur_date"] = time.strftime("%Y-%m-%d")
-    df_depot.at[row.Index, "value"] = cur_price * row.amount
-    df_depot.at[row.Index, "rendite"] = cur_return
-    # except Exception as err:
-    #     print("0", row.symbol, err)
+    try:
+        cur_price = yf.Ticker(row.symbol).info['regularMarketPrice']
+        df_depot.at[row.Index, "price_cur"] = cur_price
+        df_depot.at[row.Index, "cur_date"] = time.strftime("%Y-%m-%d")
+        df_depot.at[row.Index, "value"] = cur_price * row.amount
+        df_depot.at[row.Index, "rendite"] = cur_price / row.price_buy - 1
+    except Exception as err:
+        print("0", row.symbol, err)
 df_depot = df_depot.drop(columns='lev_score').merge(df_result[['symbol', 'lev_score']], on='symbol', how='left')
 df_depot.at[0, 'lev_score'] = 100
 
