@@ -3,10 +3,10 @@ name: data-pipeline-dates_data_daily
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 2 * * * # every day at 02:00 - crontab guru for more info
+    - cron: 15 2 * * * # every day at 02:15 - crontab guru for more info
 
 jobs:
-  run-data-pipeline:
+  run-data-pipeline-daily:
     runs-on: ubuntu-latest # 1. create an ubuntu instance
     steps:
       - name: Checkout repo content # 2. pull all code from github repo

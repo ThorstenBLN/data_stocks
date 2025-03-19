@@ -3,10 +3,10 @@ name: data-pipeline-dates_kgv-weekly
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 18 * * 0 # every sunday at 18:00 - crontab guru for more info
+    - cron: 15 18 * * 0 # every sunday at 18:15 - crontab guru for more info
 
 jobs:
-  run-data-pipeline:
+  run-data-pipeline-weekly:
     runs-on: ubuntu-latest # 1. create an ubuntu instance
     steps:
       - name: Checkout repo content # 2. pull all code from github repo

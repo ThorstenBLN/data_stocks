@@ -3,10 +3,10 @@ name: data-pipeline-symbols_dates
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 10 1 * * # every 1st day in month at 10:00 a.m. crontab guru for more info
+    - cron: 15 10 1 * * # every 1st day in month at 10:15 a.m. crontab guru for more info
 
 jobs:
-  run-data-pipeline:
+  run-data-pipeline-monthly:
     runs-on: ubuntu-latest # 1. create an ubuntu instance
     steps:
       - name: Checkout repo content # 2. pull all code from github repo
