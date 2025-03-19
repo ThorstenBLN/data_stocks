@@ -36,6 +36,7 @@ else:
 df_depot.reset_index(drop=True, inplace=True)
 mask_bank = df_depot['symbol'] == 'bank'
 for row in df_depot.loc[~mask_bank].itertuples():
+    print(row.Index, type(row.Index))
     try:
         cur_price = yf.Ticker(row.symbol).info['regularMarketPrice']
         # cur_return = cur_price / row.price_buy - 1
