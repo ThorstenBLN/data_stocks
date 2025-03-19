@@ -35,8 +35,7 @@ else:
 # 1. update the current values of the stocks
 df_depot.reset_index(drop=True, inplace=True)
 mask_bank = df_depot['symbol'] == 'bank'
-df_check = df_depot.copy()
-for row in df_check.loc[~mask_bank].itertuples():
+for row in df_depot.loc[~mask_bank].itertuples():
     try:
         cur_price = yf.Ticker(row.symbol).info['regularMarketPrice']
         df_depot.at[row.Index, "price_cur"] = cur_price
