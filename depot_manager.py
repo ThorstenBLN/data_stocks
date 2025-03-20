@@ -39,18 +39,19 @@ else:
 
 # 1. update the current values of the stocks
 df_depot.reset_index(drop=True, inplace=True)
+cur_time = pd.Timestamp.now() 
 mask_bank = df_depot['symbol'] == 'bank'
 for row in df_depot.loc[~mask_bank].itertuples():
     try:
         cur_price = yf.Ticker(row.symbol).info['regularMarketPrice']
         df_depot.at[row.Index, "price_cur"] = cur_price
-        df_depot.at[row.Index, "cur_date"] = pd.Timestamp.now() # pd.time.strftime("%Y-%m-%d")
+        df_depot.at[row.Index, "cur_date"] = cur_time # pd.time.strftime("%Y-%m-%d")
         df_depot.at[row.Index, "value"] = cur_price * row.amount
         df_depot.at[row.Index, "rendite"] = cur_price / row.price_buy - 1
     except Exception as err:
         print("0", row.symbol, err)
 df_depot = df_depot.drop(columns='lev_score').merge(df_result[['symbol', 'lev_score']], on='symbol', how='left')
-df_depot.at[0, "cur_date"] = pd.Timestamp.now() # pd.time.strftime("%Y-%m-%d")
+df_depot.at[0, "cur_date"] = cur_time # pd.time.strftime("%Y-%m-%d")
 df_depot.at[0, 'lev_score'] = 100
 
 # 2. buy/sell stocks 
@@ -140,7 +141,8 @@ df_depot['stop_loss'] = np.where(df_depot['price_cur'] * STOP_LOSS_PC > df_depot
 
 # 4. add depot to depot historic
 df_depot_hist = pd.concat([df_depot_hist, df_depot], axis=0).reset_index(drop=True)
-# 4. save Files
+
+# 5. save Files
 df_depot_hist.to_excel(PATH + FILE_DEPOT_HIST, index=False)
 df_depot.to_excel(PATH + FILE_DEPOT, index=False)
 df_transact.to_excel(PATH + FILE_TRANSACTIONS, index=False)
