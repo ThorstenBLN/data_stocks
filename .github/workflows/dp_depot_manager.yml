@@ -3,7 +3,7 @@ name: data-pipeline-depot-manager
 on:
   workflow_dispatch:
   schedule:
-    - cron: 15 9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * 1,2,3,4,5,6 # every day every 2 hours from 10 to 22 - crontab guru for more info
+    - cron: 15 9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * 1,2,3,4,5,6 # every day every hour from 10 to 22, not on sunday as other runs run - crontab guru for more info
 
 jobs:
   run-depot-manager:
@@ -31,7 +31,11 @@ jobs:
           git config user.email 'github-actions@gibthub.com'
           git add .
           git diff --staged --quiet || echo "changes=true" >> $GITHUB_ENV 
-      - name: commit and push if changes
+      - name: Checkout repo content # pull before commit
+        uses: actions/checkout@v4 
+        with: 
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # give workflow read and write access  to repo 18:36
+      - name: commit and push if changes # commit changes
         if: env.changes == 'true'
         run: |
           git commit -m "updated depot"
