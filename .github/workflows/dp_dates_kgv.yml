@@ -3,7 +3,7 @@ name: data-pipeline-dates_kgv-weekly
 on:
   workflow_dispatch:
   schedule:
-    - cron: 15 18 * * 0 # every sunday at 18:15 - crontab guru for more info
+    - cron: 15 15 * * 0 # every sunday at 15:15 - crontab guru for more info
 
 jobs:
   run-data-pipeline-weekly:

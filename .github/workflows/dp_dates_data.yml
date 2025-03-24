@@ -3,7 +3,7 @@ name: data-pipeline-dates_data_daily
 on:
   workflow_dispatch:
   schedule:
-    - cron: 15 2 * * * # every day at 02:15 - crontab guru for more info
+    - cron: 15 1 * * 1,2,3,4,5,6 # every day at 01:15 except sundays- crontab guru for more info
 
 jobs:
   run-data-pipeline-daily:
