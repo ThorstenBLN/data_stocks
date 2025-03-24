@@ -31,10 +31,6 @@ jobs:
           git config user.email 'github-actions@gibthub.com'
           git add .
           git diff --staged --quiet || echo "changes=true" >> $GITHUB_ENV 
-      - name: Checkout repo content # pull before commit
-        uses: actions/checkout@v4 
-        with: 
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # give workflow read and write access  to repo 18:36
       - name: commit and push if changes # commit changes
         if: env.changes == 'true'
         run: |
