@@ -23,14 +23,14 @@ NA_PENALTY = -0.333
 DAYS_THRES = 85
 
 # 1. load base data ####################################################################
-if not os.path.exists(PATH + FILE_RESULT): # for the first time there is no result file
+if not os.path.exists(PATH + FILE_RESULT_DAY): # for the first time there is no result file
     df_result_cur = pd.DataFrame()
 else:
-    df_result_cur = pd.read_excel(PATH + FILE_RESULT)
+    df_result_cur = pd.read_excel(PATH + FILE_RESULT_DAY)
 df_base_orig = pd.read_excel(PATH + FILE_SYMBOLS)
 mask = (df_base_orig['data_all'] == 1) & (df_base_orig['symbol'].notna())
 df_base = df_base_orig.loc[mask].copy()
-df_dates = pd.read_excel(PATH+ FILE_DATES)
+df_dates = pd.read_excel(PATH + FILE_DATES)
 
 # 2. refresh financial dates ###########################################################
 # 2.1 filter on symbols where last reporting date is older then x days (ca. 25 min / 1000 symbols)
@@ -80,7 +80,7 @@ for row in df_base.iloc[:].itertuples():
     qrt_date = df_dates_qrt_rel.loc[df_dates_qrt_rel['symbol'] == row.symbol]['date']
     jv_date = df_dates_jv_rel.loc[df_dates_jv_rel['symbol'] == row.symbol]['date']
     data.append(f.get_levermann_data(row, df_index_hist, df_index_prices, DATES, qrt_date, jv_date))
-    time.sleep(np.random.uniform(0.9, 1.4))
+    time.sleep(np.random.uniform(1, 1.5))
 df_data = pd.DataFrame(data)
 df_data['data_date'] = pd.to_datetime(df_data['data_date']).dt.date
 df_data.to_excel(PATH + FILE_DATA, index=False)
