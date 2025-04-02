@@ -81,7 +81,7 @@ for row in df_buy_opt.itertuples():
     if df_depot.loc[mask_bank]['value'].values[0] >= INVEST_VALUE:
         VALUE = INVEST_VALUE
     elif df_depot.loc[mask_bank]['value'].values[0] >= MIN_INVEST_VALUE:
-        VALUE = MIN_INVEST_VALUE
+        VALUE = df_depot.loc[mask_bank]['value'].values[0]
     else:
         break
     try:
@@ -124,7 +124,7 @@ for row in df_sales.itertuples():
             if df_depot.loc[mask_bank]['value'].values[0] >= INVEST_VALUE:
                 VALUE = INVEST_VALUE
             elif df_depot.loc[mask_bank]['value'].values[0] >= MIN_INVEST_VALUE:
-                VALUE = MIN_INVEST_VALUE
+                VALUE = df_depot.loc[mask_bank]['value'].values[0]
             amount = VALUE // cur_price
             df_temp = pd.DataFrame({"type":"buy", "symbol":df_buy_opt.at[row.Index, 'symbol'], 'name': df_buy_opt.at[row.Index, 'name'],'buy_date':cur_time, 'price_buy':cur_price, 'amount':amount, 'cur_date':cur_time, 'price_cur':cur_price, 'value':cur_price * amount, 'stop_loss':cur_price * STOP_LOSS_PC, 'rendite':0, 'lev_score': df_buy_opt.at[row.Index, 'lev_score']}, index=[0]) 
             df_transact = pd.concat([df_transact, df_temp]).reset_index(drop=True)
