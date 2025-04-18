@@ -28,7 +28,7 @@ for row in df_symbols.iloc[:].itertuples():
     if row.Index % 100 == 0:
         print((row.Index, row.symbol))
     data_yf.append(f.yf_data_available(row.symbol))
-    time.sleep(np.random.uniform(0.2, 0.5))
+    time.sleep(np.random.uniform(0.2, 0.6))
 print("all data collected")
 df_symbols['data_yf'] = data_yf
 
@@ -40,7 +40,7 @@ for row in df_symbols.loc[df_symbols['data_yf'] == 1].iloc[:].itertuples():
     if row.Index % 100 == 0:
         print(row.Index, row.symbol)
     fin_links.append(f.get_url_finanzen(row.symbol, row.name))
-    time.sleep(np.random.uniform(0.3, 0.8))
+    time.sleep(np.random.uniform(0.2, 0.5))
 df_fin_links = pd.DataFrame(fin_links)
 
 # add links and check if symbols are identical 
