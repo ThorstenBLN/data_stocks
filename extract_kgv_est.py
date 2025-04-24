@@ -38,7 +38,7 @@ df_kgv_est_wide = df_kgv_est.loc[~df_kgv_est['kgv'].isna()].pivot(index='isin', 
 # df_kgv_est_wide.to_excel(PATH + FILE_KGV_EST, index=False)
 print("code est_kgv finished successfully")
 
-df_kgv_real_wide = pd.read_excel(PATH + "test_kgv_5y_REAL.xlsx")
+df_kgv_real_wide = pd.read_excel(PATH + FILE_KGV_REAL)
 
 # 2.4. add both data and calculate 5 years kgv
 df_kgv = df_kgv_real_wide.merge(df_kgv_est_wide, on='isin', how='outer')
