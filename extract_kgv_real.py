@@ -22,7 +22,7 @@ kgv_real = []
 # relevant years are the last passed 4 years 
 prev_year = dt.datetime.now().year - 1
 REL_YEARS_REAL = [str(year) for year in range(prev_year, prev_year - 4, -1)]
-for row in df_base.loc[df_base['data_all'] == 1].iloc[:100].itertuples():
+for row in df_base.loc[df_base['data_all'] == 1].iloc[:].itertuples():
     if row.Index % 100 == 0:
         print(row.Index, row.symbol)
     kgv_real = kgv_real + f.scrape_finanzen_kgv_real(row.isin, row.kgv_old_url, REL_YEARS_REAL)
