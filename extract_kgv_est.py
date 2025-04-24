@@ -22,7 +22,7 @@ kgv_est = []
 # rel years are past year plus 3 more years
 prev_year = dt.datetime.now().year - 1
 REL_YEARS_EST = [str(year) + "e" for year in range(prev_year, prev_year + 4)]
-for row in df_base.loc[df_base['data_all'] == 1].iloc[:].itertuples():
+for row in df_base.loc[df_base['data_all'] == 1].iloc[:100].itertuples():
     if row.Index % 100 == 0:
         print(row.Index, row.symbol)
     kgv_est = kgv_est + f.scrape_finanzen_kgv_est(row.isin, row.kgv_est_url, REL_YEARS_EST)
