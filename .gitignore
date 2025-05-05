@@ -172,3 +172,7 @@ credentials.py
 
 # PyPI configuration file
 .pypirc
+
+# ignore project
+data/lstm_model/*.*
+data_prep.py
